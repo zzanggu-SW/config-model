@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "server-config-model"
+version = "0.1.0"
+description = ""
+authors = ["zzanggu-SW <gyeongmin951@aiofarm.co.kr>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pydantic = "^2.8.2"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
