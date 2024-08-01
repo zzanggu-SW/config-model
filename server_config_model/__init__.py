@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from typing import List
 
 
+# 버전 업데이트 테스트
 class PortBaseConfig(BaseModel):
     port: str = "COM3"
     baudrate: str = "38400"
