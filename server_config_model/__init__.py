@@ -22,7 +22,6 @@ class SerialConfig(BaseModel):
 
 class ArduinoConfig(PortBaseConfig):
     test_message: str = 'test_message'
-    pass
 
 
 class ProgramConfig(BaseModel):
