@@ -128,26 +128,37 @@ class RootConfig(BaseModel):
 
 
 def backup_config():
-    """Backup the aiofarm_config.json file to the aiofarm_config_backup directory."""
+    """Backup the aiofarm_config.json, pyproject.toml, and poetry.lock files to the aiofarm_config_backup directory."""
+    
+    def backup_file(source_file, backup_file):
+        if os.path.exists(source_file):
+            shutil.copy2(source_file, backup_file)
+            print(f"Backup successful: {backup_file}")
+        else:
+            print(f"Source file does not exist: {source_file}")
+    
     home_dir = os.path.expanduser("~")
-    source_file = os.path.join(home_dir, "aiofarm_config.json")
-    project_file = "pyproject.toml"
     backup_dir = os.path.join(home_dir, "aiofarm_config_backup")
 
     # Create backup directory if it doesn't exist
     if not os.path.exists(backup_dir):
         os.makedirs(backup_dir)
 
-    # Generate a unique backup file name with timestamp
+    # Generate a unique timestamp
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    backup_file = os.path.join(backup_dir, f"aiofarm_config_{timestamp}.json")
+    
+    # List of files to backup
+    files_to_backup = {
+        "aiofarm_config.json": os.path.join(home_dir, "aiofarm_config.json"),
+        "pyproject.toml": os.path.join(home_dir, "pyproject.toml"),
+        "poetry.lock": os.path.join(home_dir, "poetry.lock")
+    }
 
-    if os.path.exists(source_file):
-        shutil.copy2(source_file, backup_file)
-        print(f"Backup successful: {backup_file}")
-    else:
-        print(f"Source file does not exist: {source_file}")
-
+    # Backup each file
+    for name, source_file in files_to_backup.items():
+        backup_file_name = f"{name.split('.')[0]}_{timestamp}.{name.split('.')[1]}"
+        backup_file_path = os.path.join(backup_dir, backup_file_name)
+        backup_file(source_file, backup_file_path)
 
 def save_config(root_config: RootConfig):
     RootConfig.model_validate(root_config)
