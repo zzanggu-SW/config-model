@@ -5,6 +5,6 @@
 테스트는 모델의 예시 json파일을 등록하고 순차적으로 유효성 검사를 하는 방식으로 진행한다.
 
 테스트가 통과한다면 기존의 버전 태그의 head를 최신으로 업데이트한다.(유닛테스트 등 포함)
-'''git tag -d {tag name} && git tag {tag name} && git origin push :ref/tag/{tag name} && git push origin {tag name}'''
+'''git tag -d {tag name} && git tag {tag name} && git push origin :ref/tag/{tag name} && git push origin {tag name}'''
 
 기존 json 파일로 인해서 테스트가 통과가 되지 않는다면 호환이 되지 않는 json 파일을 지우고 다른 버전으로 출시해야한다.
