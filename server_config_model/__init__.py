@@ -148,7 +148,7 @@ def backup_config():
         os.makedirs(backup_dir)
 
     # Generate a unique timestamp
-    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     
     # List of files to backup
     files_to_backup = {
