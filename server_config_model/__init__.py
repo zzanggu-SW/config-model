@@ -7,6 +7,8 @@ import os
 import shutil
 
 
+__version__ = "v0.1-beta"
+
 class EncodingEnum(str, Enum):
     ASCII = "ascii"
     UTF8 = "utf-8"
@@ -25,12 +27,6 @@ class FormatEnum(str, Enum):
 class ComputerTypeEnum(str, Enum):
     Vision = "vision"
     Server = "server"
-
-
-class SerialTypeEnum(str, Enum):
-    SingleGear = "single_gear"
-    MultiGear = "multi_gear"
-    TransparentBelt = "transparent_belt"
 
 
 class PortBaseConfig(BaseModel):
@@ -62,10 +58,11 @@ class OutputSerialConfigItem(PortBaseConfig):
 class SerialConfig(BaseModel):
     inputs: List[InputSerialConfigItem] = [InputSerialConfigItem]
     outputs: List[OutputSerialConfigItem] = [OutputSerialConfigItem]
-    message_encode_type: EncodingEnum = EncodingEnum.UTF8
-    message_format_type: FormatEnum = FormatEnum.CRLF
+    test_message_encode_type: EncodingEnum = EncodingEnum.UTF8
+    test_message_format_type: FormatEnum = FormatEnum.CRLF
     baudrate: int = 38400
     test_message_to_sorter: str = "0"
+    production_result_sender_module: Optional[str] = None
 
 
 class ArduinoConfig(PortBaseConfig):
@@ -155,7 +152,9 @@ def backup_config():
 def save_config(root_config: RootConfig):
     RootConfig.model_validate(root_config)
     try:
-        with open(os.path.expanduser("~/aiofarm_config.json"), "w", encoding="utf-8") as f:
+        with open(
+            os.path.expanduser("~/aiofarm_config.json"), "w", encoding="utf-8"
+        ) as f:
             json.dump(root_config.model_dump(), f, ensure_ascii=False, indent=4)
         return True
     except Exception as e:
@@ -205,10 +204,6 @@ def load_server_root_config() -> RootConfig:
             json.dump(root_config.model_dump(), f, indent=4)
 
     return root_config
-
-
-def load_vision_config() -> None:
-    pass
 
 
 def load_config() -> RootConfig:
