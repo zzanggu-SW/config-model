@@ -130,6 +130,43 @@ class RootConfig(BaseModel):
         return config
 
 
+def list_unique_timestamps():
+    """Return a list of unique timestamps from the backup files."""
+    home_dir = os.path.expanduser("~")
+    backup_dir = os.path.join(home_dir, "aiofarm_config_backup")
+    timestamps = set()
+    for filename in os.listdir(backup_dir):
+        if filename.startswith("aiofarm_config_"):
+            parts = filename.split('_')
+            if len(parts) > 1:
+                timestamp = parts[-1].split('.')[0]  # Extract the timestamp
+                timestamps.add(timestamp)
+    return sorted(timestamps)
+
+
+def rollback_config(timestamp):
+    """Rollback the config files to the state of the given timestamp."""
+    
+    home_dir = os.path.expanduser("~")
+    backup_dir = os.path.join(home_dir, "aiofarm_config_backup")
+
+    files_to_rollback = {
+        "aiofarm_config.json": os.path.join(backup_dir, f"aiofarm_config_{timestamp}.json"),
+        "pyproject.toml": os.path.join(backup_dir, f"pyproject_{timestamp}.toml"),
+        "poetry.lock": os.path.join(backup_dir, f"poetry_{timestamp}.lock")
+    }
+    
+    home_dir = os.path.expanduser("~")
+    
+    for original_file, backup_file in files_to_rollback.items():
+        target_path = os.path.join(backup_dir, original_file)
+        if os.path.exists(backup_file):
+            shutil.copy2(backup_file, target_path)
+            print(f"Rolled back {original_file} to {target_path}")
+        else:
+            print(f"Backup file not found: {backup_file}")
+
+
 def backup_config():
     """Backup the aiofarm_config.json, pyproject.toml, and poetry.lock files to the aiofarm_config_backup directory."""
     
@@ -153,8 +190,8 @@ def backup_config():
     # List of files to backup
     files_to_backup = {
         "aiofarm_config.json": os.path.join(home_dir, "aiofarm_config.json"),
-        "pyproject.toml": os.path.join(home_dir, "pyproject.toml"),
-        "poetry.lock": os.path.join(home_dir, "poetry.lock")
+        "pyproject.toml": os.path.join(os.getcwd(), "pyproject.toml"),
+        "poetry.lock": os.path.join(os.getcwd(), "poetry.lock")
     }
 
     # Backup each file
