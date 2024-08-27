@@ -63,6 +63,9 @@ class SerialConfig(BaseModel):
     baudrate: int = 38400
     test_message_to_sorter: str = "0"
     production_result_sender_module: Optional[str] = None
+    is_read_configured: bool = False
+    is_send_configured: bool = False
+    signal_count_per_pulse: int = 2
 
 
 class ArduinoConfig(PortBaseConfig):
@@ -87,12 +90,6 @@ class ServerConfig(BaseModel):
     program_config: ProgramConfig = ProgramConfig()
     arduino_config: ArduinoConfig = ArduinoConfig()
     serial_config: SerialConfig = SerialConfig()
-
-
-ExecuteFileMap = {
-    ComputerTypeEnum.Vision.value: "vision_config_app.py",
-    ComputerTypeEnum.Server.value: "server_config_app.py",
-}
 
 
 class VisionConfig(BaseModel):
