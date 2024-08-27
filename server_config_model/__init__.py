@@ -56,8 +56,8 @@ class OutputSerialConfigItem(PortBaseConfig):
 
 
 class SerialConfig(BaseModel):
-    inputs: List[InputSerialConfigItem] = [InputSerialConfigItem]
-    outputs: List[OutputSerialConfigItem] = [OutputSerialConfigItem]
+    inputs: List[InputSerialConfigItem] = [InputSerialConfigItem()]
+    outputs: List[OutputSerialConfigItem] = [OutputSerialConfigItem()]
     test_message_encode_type: EncodingEnum = EncodingEnum.UTF8
     test_message_format_type: FormatEnum = FormatEnum.CRLF
     baudrate: int = 38400
