@@ -197,6 +197,7 @@ def backup_config():
 
 def save_config(root_config: RootConfig):
     RootConfig.model_validate(root_config)
+    RootConfig(**root_config.model_dump())
     try:
         with open(
             os.path.expanduser("~/aiofarm_config.json"), "w", encoding="utf-8"
