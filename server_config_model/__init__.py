@@ -198,16 +198,10 @@ def backup_config():
 def save_config(root_config: RootConfig):
     RootConfig.model_validate(root_config)
     RootConfig(**root_config.model_dump())
-    try:
-        with open(
-            os.path.expanduser("~/aiofarm_config.json"), "w", encoding="utf-8"
-        ) as f:
-            json.dump(root_config.model_dump(), f, ensure_ascii=False, indent=4)
-        return True
-    except Exception as e:
-        print(f"Error saving config: {e}")
-        return False
-
+    with open(
+        os.path.expanduser("~/aiofarm_config.json"), "w", encoding="utf-8"
+    ) as f:
+        json.dump(root_config.model_dump(), f, ensure_ascii=False, indent=4)
 
 DEFAULT_SERVER_ROOT = RootConfig(
     config_type=ComputerTypeEnum.Server,
