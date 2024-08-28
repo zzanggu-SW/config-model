@@ -36,6 +36,7 @@ class PortBaseConfig(BaseModel):
 
 class InputSerialConfigItem(PortBaseConfig):
     pin: int = 2
+    camera_delay: int = 10
 
     @field_validator("pin")
     def check_pin_range(cls, v):
