@@ -231,7 +231,7 @@ def load_server_root_config() -> RootConfig:
     """Server 설정 프레임과 일치하는 RootConfig를 반환합니다."""
     is_wrong_process = False
     try:
-        with open(os.path.expanduser("~/aiofarm_config.json"), "r") as f:
+        with open(os.path.expanduser("~/aiofarm_config.json"), "r", encoding="utf-8") as f:
             data = json.load(f)
         root_config = RootConfig(**data)
         ServerConfig(**root_config.config.model_dump())
@@ -254,7 +254,7 @@ def load_server_root_config() -> RootConfig:
 def load_config() -> RootConfig:
     """Load settings from a JSON file and return a Config object."""
     try:
-        with open(os.path.expanduser("~/aiofarm_config.json"), "r") as f:
+        with open(os.path.expanduser("~/aiofarm_config.json"), "r", encoding="utf-8") as f:
             data = json.load(f)
         config = RootConfig.model_validate(data)
     except Exception as e:
