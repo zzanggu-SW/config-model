@@ -64,6 +64,7 @@ class SerialConfig(BaseModel):
     baudrate: int = 38400
     test_message_to_sorter: str = "0"
     production_result_sender_module: Optional[str] = None
+    is_production_sketch_uploaded: bool = False
     is_read_configured: bool = False
     is_send_configured: bool = False
     signal_count_per_pulse: int = 2
