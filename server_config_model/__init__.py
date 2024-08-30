@@ -72,6 +72,7 @@ class SerialConfig(BaseModel):
 
 class ArduinoConfig(PortBaseConfig):
     test_message: str = "test_message"
+    is_upload_port_assigned: bool = False
 
 
 class ProgramConfig(BaseModel):
