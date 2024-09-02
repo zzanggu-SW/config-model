@@ -8,3 +8,5 @@
 '''git tag -d {tag name} && git tag {tag name} && git push origin :ref/tag/{tag name} && git push origin {tag name}'''
 
 기존 json 파일로 인해서 테스트가 통과가 되지 않는다면 호환이 되지 않는 json 파일을 지우고 다른 버전으로 출시해야한다.
+
+무분별한 태그의 증식을 지양하여, 태그별로 반복적인 공통 업데이트를 줄인다.
