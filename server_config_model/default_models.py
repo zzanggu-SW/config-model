@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class DefaultResult(BaseModel):
+class TestSortResult(BaseModel):
     client: int = 0
     count_flag: int = 0
     grade_idx: int = 0

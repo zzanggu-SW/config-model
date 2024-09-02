@@ -7,7 +7,7 @@ from typing import List, Optional, Union
 
 from pydantic import BaseModel, ValidationInfo, field_validator
 
-from server_config_model.default_models import DefaultResult
+from server_config_model.default_models import TestSortResult
 
 __version__ = "v0.1-beta"
 
