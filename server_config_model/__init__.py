@@ -77,9 +77,13 @@ class ArduinoConfig(PortBaseConfig):
     test_message: str = "test_message"
     is_upload_port_assigned: bool = False
 
+class Client(BaseModel):
+    ip: str
+    client_idx: int
 
 class ProgramConfig(BaseModel):
     line_count: int = 0
+    clients: List[Optional[Client]] = []
 
 
 class Config(BaseModel):
