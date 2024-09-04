@@ -88,7 +88,7 @@ class Line(BaseModel):
 
 class ProgramConfig(BaseModel):
     line_count: int = 0
-    liens: List[Optional[Line]] = []
+    lines: List[Optional[Line]] = []
 
 
 class Config(BaseModel):
