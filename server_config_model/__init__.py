@@ -82,7 +82,7 @@ class ArduinoConfig(PortBaseConfig):
 
 class Line(BaseModel):
     ip: str
-    lien_idx: int
+    line_idx: int
     grade_idx: int = 0
 
 
