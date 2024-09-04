@@ -11,6 +11,8 @@ from server_config_model.default_models import TestSortResult
 
 __version__ = "v0.1-beta"
 
+HOME_DIR = "~/.aiofarm/configs"
+
 
 class EncodingEnum(str, Enum):
     ASCII = "ascii"
@@ -77,13 +79,16 @@ class ArduinoConfig(PortBaseConfig):
     test_message: str = "test_message"
     is_upload_port_assigned: bool = False
 
-class Client(BaseModel):
+
+class Line(BaseModel):
     ip: str
-    client_idx: int
+    lien_idx: int
+    grade_idx: int = 0
+
 
 class ProgramConfig(BaseModel):
     line_count: int = 0
-    clients: List[Optional[Client]] = []
+    liens: List[Optional[Line]] = []
 
 
 class Config(BaseModel):
@@ -136,7 +141,7 @@ class RootConfig(BaseModel):
 
 def list_unique_timestamps():
     """Return a list of unique timestamps from the backup files."""
-    home_dir = os.path.expanduser("~")
+    home_dir = os.path.expanduser(HOME_DIR)
     backup_dir = os.path.join(home_dir, "aiofarm_config_backup")
     timestamps = set()
     for filename in os.listdir(backup_dir):
@@ -151,7 +156,7 @@ def list_unique_timestamps():
 def rollback_config(timestamp):
     """Rollback the config files to the state of the given timestamp."""
 
-    home_dir = os.path.expanduser("~")
+    home_dir = os.path.expanduser(HOME_DIR)
     backup_dir = os.path.join(home_dir, "aiofarm_config_backup")
 
     files_to_rollback = {
@@ -161,8 +166,6 @@ def rollback_config(timestamp):
         "pyproject.toml": os.path.join(backup_dir, f"pyproject_{timestamp}.toml"),
         "poetry.lock": os.path.join(backup_dir, f"poetry_{timestamp}.lock"),
     }
-
-    home_dir = os.path.expanduser("~")
 
     for original_file, backup_file in files_to_rollback.items():
         target_path = os.path.join(backup_dir, original_file)
@@ -183,7 +186,7 @@ def backup_config():
         else:
             print(f"Source file does not exist: {source_file}")
 
-    home_dir = os.path.expanduser("~")
+    home_dir = os.path.expanduser(HOME_DIR)
     backup_dir = os.path.join(home_dir, "aiofarm_config_backup")
 
     # Create backup directory if it doesn't exist
@@ -210,23 +213,15 @@ def backup_config():
 def save_config(root_config: RootConfig):
     RootConfig.model_validate(root_config)
     RootConfig(**root_config.model_dump())
-    with open(os.path.expanduser("~/aiofarm_config.json"), "w", encoding="utf-8") as f:
+    with open(
+        os.path.expanduser(f"{HOME_DIR}/aiofarm_config.json"),
+        "w",
+        encoding="utf-8",
+    ) as f:
         json.dump(root_config.model_dump(), f, ensure_ascii=False, indent=4)
 
 
-DEFAULT_SERVER_ROOT = RootConfig(
-    config_type=ComputerTypeEnum.Server,
-    config=ServerConfig(
-        arduino_config=ArduinoConfig(port="COM3"),
-        serial_config=SerialConfig(
-            inputs=[InputSerialConfigItem(port="COM4")],
-            outputs=[
-                OutputSerialConfigItem(port="COM5", offset=23),
-                OutputSerialConfigItem(port="COM6", offset=23),
-            ],
-        ),
-    ),
-)
+DEFAULT_SERVER_ROOT = RootConfig()
 
 
 # DEFAULT_VISION_ROOT_CONFIG = RootConfig(
@@ -239,7 +234,9 @@ def load_server_root_config() -> RootConfig:
     is_wrong_process = False
     try:
         with open(
-            os.path.expanduser("~/aiofarm_config.json"), "r", encoding="utf-8"
+            os.path.expanduser(f"{HOME_DIR}/aiofarm_config.json"),
+            "r",
+            encoding="utf-8",
         ) as f:
             data = json.load(f)
         root_config = RootConfig(**data)
@@ -254,7 +251,7 @@ def load_server_root_config() -> RootConfig:
         root_config: RootConfig = DEFAULT_SERVER_ROOT
 
     if is_wrong_process:
-        with open(os.path.expanduser("~/aiofarm_config.json"), "w") as f:
+        with open(os.path.expanduser(f"{HOME_DIR}/aiofarm_config.json"), "w") as f:
             json.dump(root_config.model_dump(), f, indent=4)
 
     return root_config
@@ -264,24 +261,14 @@ def load_config() -> RootConfig:
     """Load settings from a JSON file and return a Config object."""
     try:
         with open(
-            os.path.expanduser("~/aiofarm_config.json"), "r", encoding="utf-8"
+            os.path.expanduser(f"{HOME_DIR}/aiofarm_config.json"),
+            "r",
+            encoding="utf-8",
         ) as f:
             data = json.load(f)
         config = RootConfig.model_validate(data)
     except Exception as e:
         print("Load config Error", e)
-        DEFAULT_CONFIG = RootConfig(
-            config_type=ComputerTypeEnum.Server,
-            config=ServerConfig(
-                arduino_config=ArduinoConfig(port="COM3"),
-                serial_config=SerialConfig(
-                    inputs=[InputSerialConfigItem(port="COM4")],
-                    outputs=[
-                        OutputSerialConfigItem(port="COM5", offset=23),
-                        OutputSerialConfigItem(port="COM6", offset=23),
-                    ],
-                ),
-            ),
-        )
+        DEFAULT_CONFIG = RootConfig()
         return DEFAULT_CONFIG
     return config
