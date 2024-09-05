@@ -221,7 +221,7 @@ def save_config(root_config: RootConfig):
         json.dump(root_config.model_dump(), f, ensure_ascii=False, indent=4)
 
 
-DEFAULT_CONFIG = RootConfig(
+DEFAULT_SERVER_ROOT = RootConfig(
     config_type=ComputerTypeEnum.Server,
     config=ServerConfig(
         arduino_config=ArduinoConfig(port="COM3"),
